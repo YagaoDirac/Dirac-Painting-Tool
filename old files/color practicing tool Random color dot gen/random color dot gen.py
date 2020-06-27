@@ -14,8 +14,8 @@ saturation = random.randint(0,1000)
 velocity = random.randint(0,255)
 
 #在这个地方写测试值，或者限制在新的范围内。
-hue = random.randint(3500,5000)
-saturation = random.randint(150,1000)
+hue = random.randint(2000,3500)
+saturation = random.randint(0,1000)
 velocity = random.randint(155,255)
 
 
