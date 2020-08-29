@@ -1,0 +1,4 @@
+wxbase314u_vc_custom.dll
+wxmsw314u_core_vc_custom.dll
+
+they are in /lib/vc_dll
