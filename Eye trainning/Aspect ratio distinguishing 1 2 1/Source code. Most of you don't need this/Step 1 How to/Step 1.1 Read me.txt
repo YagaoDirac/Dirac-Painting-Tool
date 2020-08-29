@@ -1,0 +1,2 @@
+Open the sln file with visual studio 2017(or 2015 2019). Build it. The compiling ends incorrectly. If you google the error info, you would probably get some useful infomation. I prepared something for you in the file next to this txt. Set up the project properties according to that txt, then build the project again.
+If you still encounter any issue, please report it in my discord and wait patiently. Discord address is in this repo.
