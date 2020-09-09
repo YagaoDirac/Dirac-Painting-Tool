@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\useless">
+      <UniqueIdentifier>{7a85e6ac-271b-4f40-82c9-863e53e4ddb4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\DCT">
+      <UniqueIdentifier>{74d1ffe7-5230-44c8-b09b-116bc24105c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ui">
+      <UniqueIdentifier>{4c8e424c-1e32-4173-a338-470e0a0ea59a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\from 1.1">
+      <UniqueIdentifier>{0d2937b3-5512-4c1f-b2ad-c1b11a60f298}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\DCT bmp layer memory.h">
+      <Filter>Source Files\DCT</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DCT bmp layer.h">
+      <Filter>Source Files\DCT</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DCT color.h">
+      <Filter>Source Files\DCT</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DET aspect ratio distinguishing App.h">
+      <Filter>Source Files\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DET aspect ratio distinguishing Frame.h">
+      <Filter>Source Files\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DCT util.h">
+      <Filter>Source Files\DCT</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DET aspect ratio trainer data.h">
+      <Filter>Source Files\from 1.1</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DCT vector2.h">
+      <Filter>Source Files\DCT</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\DCT bmp layer memory.cpp">
+      <Filter>Source Files\DCT</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DCT bmp layer.cpp">
+      <Filter>Source Files\DCT</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DCT color.cpp">
+      <Filter>Source Files\DCT</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DET aspect ratio distinguishing App.cpp">
+      <Filter>Source Files\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DCT util.cpp">
+      <Filter>Source Files\DCT</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DET aspect ratio trainer data.cpp">
+      <Filter>Source Files\from 1.1</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DCT vector2.cpp">
+      <Filter>Source Files\DCT</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
