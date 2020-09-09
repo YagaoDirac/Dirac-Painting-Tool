@@ -144,10 +144,10 @@ public:
 		void update()
 		{
 			answer_options.clear();
-			for (float temp = 0.005f; temp < get_upper() + get_division() * 0.5f; temp += get_division())
+			for (float temp = 0.0005f; temp < get_upper() + get_division() * 0.5f; temp += get_division())
 			{
 				if(temp>=get_lower())
-					answer_options.push_back(temp);
+					answer_options.push_back(static_cast<float>(DCT_round2i(temp*100))/100.f);
 			}
 		}
 

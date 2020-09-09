@@ -17,7 +17,7 @@ public:
 	
 
 	DET_ard_Frame()
-		:wxFrame(nullptr, wxID_ANY, "Dirac painting tool --- Eye trainning --- Aspect ratio distinguishing 1.2.1 --- github.com/YagaoDirac/Dirac-s-Painting-Tool/tree/master/Eye trainning/ --- pixiv.net/users/10845271")
+		:wxFrame(nullptr, wxID_ANY, "Dirac painting tool --- Eye trainning --- Aspect ratio distinguishing 1.2.2 --- github.com/YagaoDirac/Dirac-s-Painting-Tool/tree/master/Eye trainning/ --- pixiv.net/users/10845271")
 	{
 		SetBackgroundStyle(wxBG_STYLE_PAINT);//For using double buffering.
 		wind = new DET_ard_Window(this);
