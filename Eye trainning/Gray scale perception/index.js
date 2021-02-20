@@ -11,6 +11,18 @@ let data = null
 let layout = null
 function window_onload()
 {
+    let arr = [];
+    //arr.length = 100;
+    for (var i = 0; i < 100; i++) {
+        arr.push(Math.random());
+        //arr.push(window.crypto.getRandomValues(arr));
+    }
+
+    for (var i = 0; i < 12345; i++) {
+        Math.random();
+    }
+
+
     data = {};
     data.taskToDo = "question";
     data.answer = 0;
@@ -33,7 +45,10 @@ function window_onload()
     {
         let howToText = document.createElement("ul");
         document.body.appendChild(howToText);
-        howToText.appendChild(document.createTextNode("Click in the question to continue."))
+        howToText.appendChild(document.createTextNode("Click in the question to continue."));
+	let aboutText = document.createElement("ul");
+        document.body.appendChild(aboutText);
+        aboutText.appendChild(document.createTextNode("Gray scale perception 1.0.3. Dirac's painting tool. Github.com/yagaodirac/Dirac-painting-tool"))
     }
 }
 
@@ -55,7 +70,7 @@ function canvasOnPaint()
         case "question":
             data.taskToDo = "question with answer";
 
-            data.answer = Math.floor(Math.random() * 255);
+            data.answer = Math.floor(Math.random() * 256);
 
             //Noise in background.
             for (let xFragment = 0; xFragment < (canvas.width + 1) / blockSize; xFragment++)
@@ -92,11 +107,26 @@ function canvasOnPaint()
         case "question with answer":
 
             data.taskToDo = "question";
-            let answerText = data.answer.toString() + " ( " + Math.round(data.answer / 2.55) + " % )";
+            let answerText = data.answer.toString() + " " + Math.round(data.answer / 2.55) + "%";
             context.textAlign = "center";
-            context.textBaseLine = "middle";
+            context.textBaseline = "middle";
             context.font = "bold 100px Arial";
+            {
+                if (data.answer < 100) {
+                    let temp = data.answer + 20;
+                    context.strokeStyle = "rgb(" + temp + "," + temp + "," + temp + ")";
+                }
+                else {
+                    let temp = data.answer - 15;
+                    context.strokeStyle = "rgb(" + temp + "," + temp + "," + temp + ")";
+                }
+                context.lineWidth = 4;
+                context.lineCap = "butt";
+                context.lineJoin = "bevel";
+            }
+            context.strokeText(answerText, layout.answerPositionTop.x, layout.answerPositionTop.y);
             context.fillText(answerText, layout.answerPositionTop.x, layout.answerPositionTop.y);
+            context.strokeText(answerText, layout.answerPositionBottom.x, layout.answerPositionBottom.y);
             context.fillText(answerText, layout.answerPositionBottom.x, layout.answerPositionBottom.y);
             break;
 
