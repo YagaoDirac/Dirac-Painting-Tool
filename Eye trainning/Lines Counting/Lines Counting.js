@@ -8,8 +8,8 @@ To get the latest version, check out github.com/yagaodirac.
 
 
 let min = 3;//Included
-let max = 7;//Included
-let colorDifferenceBetweenNabours = 50;
+let max = 6;//Included
+let colorDifferenceBetweenNabours = 40;
 
 
 
@@ -81,6 +81,8 @@ function canvasOnPaint()
                context.fillRect(xFragment * blockSize, yFragment * blockSize, 100, 100);
 
             }
+         context.fillStyle = "rgba(" + answer.backgroundColorInDot + "," + answer.backgroundColorInDot + "," + answer.backgroundColorInDot + "," + 0.4 + ")";
+         context.fillRect(0, 0, canvas.width, canvas.height);
 
          //Draws reference block on 4 corners.
          if(false)
@@ -133,11 +135,11 @@ function canvasOnPaint()
          context.fillStyle = makeGreyColor(answer.backgroundColorInDot);
          {
             if (data.backgroundColorInDot < 100) {
-               let temp = data.backgroundColorInDot + 20;
+               let temp = data.backgroundColorInDot + 50;
                context.strokeStyle = "rgb(" + temp + "," + temp + "," + temp + ")";
             }
             else {
-               let temp = data.backgroundColorInDot - 15;
+               let temp = data.backgroundColorInDot - 45;
                context.strokeStyle = "rgb(" + temp + "," + temp + "," + temp + ")";
             }
             context.lineWidth = 4;
@@ -164,18 +166,18 @@ function genAnswer() {
 
    answer.answer = Math.floor(Math.random() * (max - min + 1) + min);
    answer.rotation = Math.random() * Math.PI * 100;
-   answer.radius = Math.random() * (150 + answer.answer*15) + 80 + answer.answer*10;
+   answer.radius = Math.random() * (0 + answer.answer*12) + 80 + answer.answer*20;
 
    {
       let tempList = [];
       tempList.push(0);
-      tempList.push(Math.random() * 5 + 3);//The width of background inside the question dot area.
+      tempList.push(Math.random() * 8 + 5);//The width of background inside the question dot area.
       for (var i = 0; i < answer.answer; i++) {
          tempList.push(-1);//The linear gradient
          tempList.push(Math.random() * 1.8 + 0.7);//The same color. A line needs a width.
       }
       tempList.push(-1);//The linear gradient
-      tempList.push(Math.random() * 5 + 3);//The width of background inside the question dot area.
+      tempList.push(Math.random() * 8 + 5);//The width of background inside the question dot area.
       tempList = tempList.map(function (value, index, array) {
          if (value != -1) return value;
          let temp = (array[index - 1] + array[index + 1]) / Math.random()*1.3+2.2;
