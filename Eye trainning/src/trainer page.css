@@ -1,0 +1,8 @@
+body {
+	background-color: rgb(127,127,127);
+	margin:auto;
+	line-height:0.5;
+}
+canvas {
+	//position:center;
+}

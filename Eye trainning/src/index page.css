@@ -1,0 +1,15 @@
+body {
+	 
+	background-color: rgb(199,199,199);
+	margin:auto;
+	line-height:0.5;
+	font-size:25px;
+	
+}
+.simpleInlineHead {
+	display: inline-block;
+}
+.simpleInline {
+	display: inline-block;
+	margin-left: 60px;
+}
