@@ -7,160 +7,114 @@ To get the latest version, check out github.com/yagaodirac.
 
 
 
-window.addEventListener("load", window_onload, false);
-let canvas = null;
 let data = null
 let answer = null
 let layout = null
-function window_onload()
-{
-   let arr = [];
-   //arr.length = 100;
-   for (var i = 0; i < 100; i++) {
-      arr.push(Math.random());
-      //arr.push(window.crypto.getRandomValues(arr));
-   }
 
-   for (var i = 0; i < 12345; i++) {
-      Math.random();
-   }
+function trainingPageOnload() { 
 
 
    data = {};
-   data.taskToDo = "question";
    data.answer = 0;
    layout = {};
    layout.answerPositionTop = {};
    layout.answerPositionBottom = {};
-   //layout.referenceBlockSize = 240;
-
-   canvas = document.createElement("canvas");
-   document.body.appendChild(canvas);
-   canvas.addEventListener("click", canvasOnClick)
-   canvas.width = 1000;
-   canvas.height= 1000;
-
+   
    layout.answerPositionTop = { x: canvas.width/2, y:220};
    layout.answerPositionBottom = { x: layout.answerPositionTop.x, y: canvas.height - layout.answerPositionTop.y };
 
-   requestAnimationFrame(canvasOnPaint);
 
+}
+
+let steps = []
+steps[0] = function (context) {
+
+   answerGen();
+
+   //Noise in background.
+   const blockSize = 50;
+   for (let xFragment = 0; xFragment < (canvas.width + 1) / blockSize; xFragment++)
+      for (let yFragment = 0; yFragment < (canvas.height + 1) / blockSize; yFragment++) {
+         if (Math.random() < 0.32) {
+            context.fillStyle = "hsl(" + Math.random() * 360 + "," + (Math.random() * 30 + 30) + "%," + (Math.random() * 60 + 20) + "%)";
+            context.fillRect(xFragment * blockSize, yFragment * blockSize, 100, 100);
+         }
+         else {
+            let tempBright = Math.floor(Math.random() * 255);
+            context.fillStyle = "rgb(" + tempBright + "," + tempBright + "," + tempBright + ")";
+            context.fillRect(xFragment * blockSize, yFragment * blockSize, 100, 100);
+         }
+      }
+
+   //Draws reference block on 4 corners.
    {
-      let howToText = document.createElement("ul");
-      document.body.appendChild(howToText);
-      howToText.appendChild(document.createTextNode("Click in the question to continue."));
-      let aboutText = document.createElement("ul");
-      document.body.appendChild(aboutText);
-      aboutText.appendChild(document.createTextNode("Color perception 1.0.0. Dirac's painting tool. Github.com/yagaodirac/Dirac-painting-tool"))
+      let size = Math.random() * 80 + 80;
+
+      let topLeftIsWhite = true;
+      if (Math.random() < 0.5) { topLeftIsWhite = false; }
+      if (topLeftIsWhite) context.fillStyle = "rgb(255, 255, 255)";
+      else context.fillStyle = "rgb(0, 0, 0)";
+      context.fillRect(0, 0, size, size);
+      context.fillRect(canvas.width - size, canvas.height - size, canvas.width, canvas.height);
+      if (topLeftIsWhite) context.fillStyle = "rgb(0, 0, 0)";
+      else context.fillStyle = "rgb(255, 255, 255)";
+      context.fillRect(0, canvas.height - size, size, canvas.height);
+      context.fillRect(canvas.width - size, 0, canvas.width, size);
+   }
+
+   //Draws the question dot.
+   {
+      if (Math.random() < 1) {
+         let size = Math.random() * 170 + 110;
+         let offset = { x: Math.random() * 360 - 180, y: Math.random() * 360 - 180 };
+
+         context.fillStyle = answer.getCSSColor();
+         context.fillRect((canvas.width - size) / 2 + offset.x, (canvas.height - size) / 2 + offset.y, size, size);
+      }
+      else {
+         //Not used yet
+         let sizeOut = Math.random() * 170 + 110;
+         let sizeCore = Math.random() * 10 + 12;
+         let offset = { x: Math.random() * 600 - 300, y: Math.random() * 600 - 300 };
+
+         context.lineWidth = 2;
+         context.strokeStyle = answer.getCSSColor();
+         context.strokeRect((canvas.width - sizeOut) / 2 + offset.x, (canvas.height - sizeOut) / 2 + offset.y, sizeOut, sizeOut);
+
+         context.fillStyle = answer.getCSSColor();
+         context.fillRect((canvas.width - sizeCore) / 2 + offset.x, (canvas.height - sizeCore) / 2 + offset.y, sizeCore, sizeCore);
+      }
    }
 }
 
-function canvasOnClick(event)
-{
-    requestAnimationFrame(canvasOnPaint);
-}
-
-function canvasOnPaint()
-{
-    let context = canvas.getContext("2d");
-
-    const blockSize = 50;
+steps[1] = function (context) {
 
 
-   switch (data.taskToDo) {
-      case "question":
-         data.taskToDo = "question with answer";
 
-         answerGen();
-
-         //Noise in background.
-         for (let xFragment = 0; xFragment < (canvas.width + 1) / blockSize; xFragment++)
-            for (let yFragment = 0; yFragment < (canvas.height + 1) / blockSize; yFragment++) {
-               if (Math.random() < 0.32) {
-                  context.fillStyle = "hsl(" + Math.random() * 360 + "," + (Math.random() * 30 + 30) + "%," + (Math.random() * 60 + 20) + "%)";
-                  context.fillRect(xFragment * blockSize, yFragment * blockSize, 100, 100);
-               }
-               else {
-                  let tempBright = Math.floor(Math.random() * 255);
-                  context.fillStyle = "rgb(" + tempBright + "," + tempBright + "," + tempBright + ")";
-                  context.fillRect(xFragment * blockSize, yFragment * blockSize, 100, 100);
-					}
-            }
-
-         //Draws reference block on 4 corners.
-         {
-            let size = Math.random() * 80 + 80;
-
-            let topLeftIsWhite = true;
-            if (Math.random() < 0.5) { topLeftIsWhite = false; }
-            if (topLeftIsWhite) context.fillStyle = "rgb(255, 255, 255)";
-            else context.fillStyle = "rgb(0, 0, 0)";
-            context.fillRect(0, 0, size, size);
-            context.fillRect(canvas.width - size, canvas.height - size, canvas.width, canvas.height);
-            if (topLeftIsWhite) context.fillStyle = "rgb(0, 0, 0)";
-            else context.fillStyle = "rgb(255, 255, 255)";
-            context.fillRect(0, canvas.height - size, size, canvas.height);
-            context.fillRect(canvas.width - size, 0, canvas.width, size);
-         }
-
-         //Draws the question dot.
-         {
-            if (Math.random() < 1) {
-               let size = Math.random() * 170 + 110;
-               let offset = { x: Math.random() * 360 - 180, y: Math.random() * 360 - 180 };
-
-               context.fillStyle = answer.getCSSColor();
-               context.fillRect((canvas.width - size) / 2 + offset.x, (canvas.height - size) / 2 + offset.y, size, size);
-            }
-            else {
-               //Not used yet
-               let sizeOut = Math.random() * 170 + 110;
-               let sizeCore = Math.random() * 10 + 12;
-               let offset = { x: Math.random() * 600 - 300, y: Math.random() * 600 - 300 };
-
-               context.lineWidth = 2;
-               context.strokeStyle = answer.getCSSColor();
-               context.strokeRect((canvas.width - sizeOut) / 2 + offset.x, (canvas.height - sizeOut) / 2 + offset.y, sizeOut, sizeOut);
-
-               context.fillStyle = answer.getCSSColor();
-               context.fillRect((canvas.width - sizeCore) / 2 + offset.x, (canvas.height - sizeCore) / 2 + offset.y, sizeCore, sizeCore);
-				}
-         }
-         break;
-      case "question with answer":
-
-         data.taskToDo = "question";
-         let answerText = answer.getHSVString() + " / " + answer.data.join(' ');
-         let answerVolume = Math.max(...answer.data);
-         context.textAlign = "center";
-         context.textBaseline = "middle";
-         context.font = "bold 60px Arial";
-         {
-            if (answerVolume < 100) {
-               let temp = answerVolume + 20;
-               context.strokeStyle = "rgb(" + temp + "," + temp + "," + temp + ")";
-            }
-            else {
-               let temp = answerVolume - 15;
-               context.strokeStyle = "rgb(" + temp + "," + temp + "," + temp + ")";
-            }
-            context.lineWidth = 4;
-            context.lineCap = "butt";
-            context.lineJoin = "bevel";
-         }
-         let offset = 150;
-
-         context.strokeText(answerText, layout.answerPositionTop.x + offset, layout.answerPositionTop.y);
-         context.fillText(answerText, layout.answerPositionTop.x + offset, layout.answerPositionTop.y);
-         context.strokeText(answerText, layout.answerPositionBottom.x + offset, layout.answerPositionBottom.y);
-         context.fillText(answerText, layout.answerPositionBottom.x + offset, layout.answerPositionBottom.y);
-         break;
-
-      default:
-         alert("data.taskToDo was assigned with a wrong value.");
-
+   let answerText = answer.getHSVString() + " / " + answer.data.join(' ');
+   let answerVolume = Math.max(...answer.data);
+   context.textAlign = "center";
+   context.textBaseline = "middle";
+   context.font = "bold 60px Arial";
+   {
+      if (answerVolume < 100) {
+         let temp = answerVolume + 20;
+         context.strokeStyle = "rgb(" + temp + "," + temp + "," + temp + ")";
+      }
+      else {
+         let temp = answerVolume - 15;
+         context.strokeStyle = "rgb(" + temp + "," + temp + "," + temp + ")";
+      }
+      context.lineWidth = 4;
+      context.lineCap = "butt";
+      context.lineJoin = "bevel";
    }
+   let offset = 150;
 
+   context.strokeText(answerText, layout.answerPositionTop.x + offset, layout.answerPositionTop.y);
+   context.fillText(answerText, layout.answerPositionTop.x + offset, layout.answerPositionTop.y);
+   context.strokeText(answerText, layout.answerPositionBottom.x + offset, layout.answerPositionBottom.y);
+   context.fillText(answerText, layout.answerPositionBottom.x + offset, layout.answerPositionBottom.y);
 
 }
 

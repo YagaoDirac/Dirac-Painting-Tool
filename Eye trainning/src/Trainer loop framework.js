@@ -35,7 +35,9 @@ function display() {
    if (can_display) {
       can_display = false;
       requestAnimationFrame(canvasOnPaint);
-      window.setTimeout(() => can_display = true, 500);
+      let timeOut = 500;
+      if (__DEBUG__) { timeOut = 100;}
+      window.setTimeout(() => can_display = true, timeOut);
    }
 }
 function window_onresize() {

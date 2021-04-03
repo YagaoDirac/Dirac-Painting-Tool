@@ -6,230 +6,188 @@
 To get the latest version, check out github.com/yagaodirac. 
  */
 
-
 let min = 0; //int. At least 0.
-let max = 100; //int. Better less than 63.
+let max = 120; //int. Better less than 63.
 
 
-window.addEventListener("load", window_onload, false);
-let canvas = null;
 let answer = {};
-let data = null
 let layout = null
-function window_onload() {
-   for (var i = 0; i < 12345; i++) {
-      Math.random();
-   }
 
 
-   data = {};
-   data.taskToDo = "question";
-   //answer = {};
-   //genAnswer();
+function trainingPageOnload() { 
+
+ 
    layout = {};
    layout.answerPositionTop = {};
    layout.answerPositionBottom = {};
-   layout.referenceBlockSize = 240;
-
-   canvas = document.createElement("canvas");
-   document.body.appendChild(canvas);
-   canvas.addEventListener("click", canvasOnClick)
-   canvas.width = 1800;
-   canvas.height = 1800;
+   layout.referenceBlockSize = 120;
 
    layout.answerPositionTop = { x: canvas.width / 2, y: 400 };
    layout.answerPositionBottom = { x: layout.answerPositionTop.x, y: canvas.height - layout.answerPositionTop.y };
 
    requestAnimationFrame(canvasOnPaint);
 
+}
+
+
+let steps = []
+steps[0] = function (context) {
+
+   genAnswer();
+
+   //Noise in background.
+   const blockSize = 50;
+   for (let xFragment = 0; xFragment < (canvas.width + 1) / blockSize; xFragment++)
+      for (let yFragment = 0; yFragment < (canvas.height + 1) / blockSize; yFragment++) {
+         if (Math.random() < 0.32) {
+            context.fillStyle = "hsl(" + Math.random() * 360 + "," + (Math.random() * 30 + 30) + "%," + (Math.random() * 60 + 20) + "%)";
+            context.fillRect(xFragment * blockSize, yFragment * blockSize, 100, 100);
+         }
+         else {
+            let tempBright = Math.floor(Math.random() * 255);
+            context.fillStyle = "rgb(" + tempBright + "," + tempBright + "," + tempBright + ")";
+            context.fillRect(xFragment * blockSize, yFragment * blockSize, 100, 100);
+         }
+      }
+
+   //Draws reference block on 4 corners.
    {
-      let howToText = document.createElement("ul");
-      document.body.appendChild(howToText);
-      howToText.appendChild(document.createTextNode("Click in the question to continue."));
-      let aboutText = document.createElement("ul");
-      document.body.appendChild(aboutText);
-      aboutText.appendChild(document.createTextNode("Gray scale difference perception 1.0.0. Dirac's painting tool. Github.com/yagaodirac/Dirac-painting-tool"))
+      let size = Math.random() * 80 + 80;
+
+      let topLeftIsWhite = true;
+      if (Math.random() < 0.5) { topLeftIsWhite = false; }
+      if (topLeftIsWhite) context.fillStyle = "rgb(255, 255, 255)";
+      else context.fillStyle = "rgb(0, 0, 0)";
+      context.fillRect(0, 0, size, size);
+      context.fillRect(canvas.width - size, canvas.height - size, canvas.width, canvas.height);
+      if (topLeftIsWhite) context.fillStyle = "rgb(0, 0, 0)";
+      else context.fillStyle = "rgb(255, 255, 255)";
+      context.fillRect(0, canvas.height - size, size, canvas.height);
+      context.fillRect(canvas.width - size, 0, canvas.width, size);
+   }
+
+   //Draws the question dot.
+   {
+      let startPoint = [Math.cos(answer.rotation), Math.sin(answer.rotation)];
+      startPoint = startPoint.map((value) => value * answer.radius);
+      startPoint = { x: startPoint[0] + canvas.width / 2, y: startPoint[1] + canvas.height / 2 };
+      let linearGradient = context.createLinearGradient(startPoint.x, startPoint.y, canvas.width - startPoint.x, canvas.height - startPoint.y);
+
+      //__DEGUB__
+      if (true) {
+         let size = 4;
+         context.fillStyle = "rgb(155,144,155)";
+         context.fillRect(startPoint.x - size / 2, startPoint.y - size / 2, size, size);
+      }
+
+
+      answer.elementList.forEach(function (value) {
+         linearGradient.addColorStop(value.stop, makeGreyColor(value.color));
+      });
+
+
+      context.fillStyle = linearGradient;
+      context.beginPath();
+      context.arc(canvas.width / 2, canvas.height / 2, answer.radius, 0, Math.PI * 2);
+      context.fill();
    }
 }
+steps[1] = function (context) {
 
-function canvasOnClick(event) {
-   requestAnimationFrame(canvasOnPaint);
-}
+   //part 1 answer[0]
+   let answerText = answer.answer[0].toString();
+   context.textAlign = "center";
+   context.textBaseline = "middle";
+   context.font = "bold 50px Arial";
 
-function canvasOnPaint() {
-   let context = canvas.getContext("2d");
-
-   const blockSize = 100;
-
-
-   switch (data.taskToDo) {
-      case "question":
-         data.taskToDo = "question with answer";
-
-         genAnswer();
-
-         //Noise in background.
-         for (let xFragment = 0; xFragment < (canvas.width + 1) / blockSize; xFragment++)
-            for (let yFragment = 0; yFragment < (canvas.height + 1) / blockSize; yFragment++) {
-               if (Math.random() < 0.32) {
-                  context.fillStyle = "hsl(" + Math.random() * 360 + "," + (Math.random() * 30 + 30) + "%," + (Math.random() * 60 + 20) + "%)";
-                  context.fillRect(xFragment * blockSize, yFragment * blockSize, 100, 100);
-               }
-               else {
-                  let tempBright = Math.floor(Math.random() * 255);
-                  context.fillStyle = "rgb(" + tempBright + "," + tempBright + "," + tempBright + ")";
-                  context.fillRect(xFragment * blockSize, yFragment * blockSize, 100, 100);
-               }
-            }
-
-         //Draws reference block on 4 corners.
-         {
-            let size = Math.random() * 150 + 150;
-
-            let topLeftIsWhite = true;
-            if (Math.random() < 0.5) { topLeftIsWhite = false; }
-            if (topLeftIsWhite) context.fillStyle = "rgb(255, 255, 255)";
-            else context.fillStyle = "rgb(0, 0, 0)";
-            context.fillRect(0, 0, size, size);
-            context.fillRect(canvas.width - size, canvas.height - size, canvas.width, canvas.height);
-            if (topLeftIsWhite) context.fillStyle = "rgb(0, 0, 0)";
-            else context.fillStyle = "rgb(255, 255, 255)";
-            context.fillRect(0, canvas.height - size, size, canvas.height);
-            context.fillRect(canvas.width - size, 0, canvas.width, size);
-         }
-
-         //Draws the question dot.
-         {
-            let startPoint = [Math.cos(answer.rotation), Math.sin(answer.rotation)];
-            startPoint = startPoint.map((value) => value * answer.radius);
-            startPoint = { x: startPoint[0] + canvas.width / 2, y: startPoint[1] + canvas.height / 2 };
-            let linearGradient = context.createLinearGradient(startPoint.x, startPoint.y, canvas.width - startPoint.x, canvas.height - startPoint.y);
-
-            //__DEGUB__
-            if (true) {
-               let size = 4;
-               context.fillStyle = "rgb(155,144,155)";
-               context.fillRect(startPoint.x - size / 2, startPoint.y - size / 2, size, size);
-            }
-
-
-            answer.elementList.forEach(function (value) {
-               linearGradient.addColorStop(value.stop, makeGreyColor(value.color));
-            });
-
-
-            context.fillStyle = linearGradient;
-            context.beginPath();
-            context.arc(canvas.width / 2, canvas.height / 2, answer.radius, 0, Math.PI * 2);
-            context.fill();
-         }
-         break;
-
-      case "question with answer":
-         data.taskToDo = "question";
-
-         //part 1 answer[0]
-         let answerText = answer.answer[0].toString();
-         context.textAlign = "center";
-         context.textBaseline = "middle";
-         context.font = "bold 100px Arial";
-
-         context.fillStyle = makeGreyColor(answer.answer[0]);
-         {
-            if (answer.answer[0] < 100) {
-               let temp = answer.answer[0] + 50;
-               context.strokeStyle = "rgb(" + temp + "," + temp + "," + temp + ")";
-            }
-            else {
-               let temp = answer.answer[0] - 45;
-               context.strokeStyle = "rgb(" + temp + "," + temp + "," + temp + ")";
-            }
-            context.lineWidth = 4;
-            context.lineCap = "butt";
-            context.lineJoin = "bevel";
-         }
-
-         let textPos = [Math.cos(answer.rotation), Math.sin(answer.rotation)];
-         textPos = textPos.map((value) => value * (answer.radius + 200));
-         textPos = { x: textPos[0] + canvas.width / 2, y: textPos[1] + canvas.height / 2 };
-
-         context.strokeText(answerText, textPos.x, textPos.y);
-         context.fillText(answerText, textPos.x, textPos.y);
-
-         //part 1 answer[1]
-         answerText = answer.answer[1].toString();
-         context.textAlign = "center";
-         context.textBaseline = "middle";
-         context.font = "bold 100px Arial";
-
-         context.fillStyle = makeGreyColor(answer.answer[1]);
-         {
-            if (answer.answer[1] < 100) {
-               let temp = answer.answer[1] + 50;
-               context.strokeStyle = "rgb(" + temp + "," + temp + "," + temp + ")";
-            }
-            else {
-               let temp = answer.answer[1] - 45;
-               context.strokeStyle = "rgb(" + temp + "," + temp + "," + temp + ")";
-            }
-            context.lineWidth = 4;
-            context.lineCap = "butt";
-            context.lineJoin = "bevel";
-         }
-
-         textPos = [Math.cos(answer.rotation), Math.sin(answer.rotation)];
-         textPos = textPos.map((value) => value * (answer.radius + 200) * -1);
-         textPos = { x: textPos[0] + canvas.width / 2, y: textPos[1] + canvas.height / 2 };
-
-         context.strokeText(answerText, textPos.x, textPos.y);
-         context.fillText(answerText, textPos.x, textPos.y);
-
-         //part 2 diff
-         answerText = (answer.answer[1] - answer.answer[0]).toString();
-         context.textAlign = "center";
-         context.textBaseline = "middle";
-         context.font = "bold 70px Arial";
-
-         let color = Math.floor((answer.answer[0] + answer.answer[1]) / 2);
-         color += 128;
-         if (color > 255) color -= 256;
-         context.fillStyle = "rgba(" + color + "," + color + "," + color + ",0.2)";
-         {
-            if (color < 100) {
-               let temp = color + 50;
-               context.strokeStyle = "rgba(" + temp + "," + temp + "," + temp + ",0.2)";
-            }
-            else {
-               let temp = color - 45;
-               context.strokeStyle = "rgba(" + temp + "," + temp + "," + temp + ",0.2)";
-            }
-            context.lineWidth = 4;
-            context.lineCap = "butt";
-            context.lineJoin = "bevel";
-         }
-
-         textPos = [Math.cos(answer.rotation), Math.sin(answer.rotation)];
-         textPos = textPos.map((value) => value * (answer.radius + 200) * -1);
-         textPos = { x: canvas.width / 2, y: canvas.height / 2 };
-
-         context.strokeText(answerText, textPos.x, textPos.y);
-         context.fillText(answerText, textPos.x, textPos.y);
-
-
-
-
-         //context.strokeText(answerText, layout.answerPositionBottom.x, canvas.height / 2);
-         //context.fillText(answerText, layout.answerPositionBottom.x, canvas.height / 2);
-
-
-
-         break;
-
-
-      default:
-         alert("data.taskToDo was assigned with a wrong value.");
-
+   context.fillStyle = makeGreyColor(answer.answer[0]);
+   {
+      if (answer.answer[0] < 100) {
+         let temp = answer.answer[0] + 50;
+         context.strokeStyle = "rgb(" + temp + "," + temp + "," + temp + ")";
+      }
+      else {
+         let temp = answer.answer[0] - 45;
+         context.strokeStyle = "rgb(" + temp + "," + temp + "," + temp + ")";
+      }
+      context.lineWidth = 4;
+      context.lineCap = "butt";
+      context.lineJoin = "bevel";
    }
+
+   let textPos = [Math.cos(answer.rotation), Math.sin(answer.rotation)];
+   textPos = textPos.map((value) => value * (answer.radius + 200));
+   textPos = { x: textPos[0] + canvas.width / 2, y: textPos[1] + canvas.height / 2 };
+
+   context.strokeText(answerText, textPos.x, textPos.y);
+   context.fillText(answerText, textPos.x, textPos.y);
+
+   //part 1 answer[1]
+   answerText = answer.answer[1].toString();
+   context.textAlign = "center";
+   context.textBaseline = "middle";
+   context.font = "bold 50px Arial";
+
+   context.fillStyle = makeGreyColor(answer.answer[1]);
+   {
+      if (answer.answer[1] < 100) {
+         let temp = answer.answer[1] + 50;
+         context.strokeStyle = "rgb(" + temp + "," + temp + "," + temp + ")";
+      }
+      else {
+         let temp = answer.answer[1] - 45;
+         context.strokeStyle = "rgb(" + temp + "," + temp + "," + temp + ")";
+      }
+      context.lineWidth = 4;
+      context.lineCap = "butt";
+      context.lineJoin = "bevel";
+   }
+
+   textPos = [Math.cos(answer.rotation), Math.sin(answer.rotation)];
+   textPos = textPos.map((value) => value * (answer.radius + 200) * -1);
+   textPos = { x: textPos[0] + canvas.width / 2, y: textPos[1] + canvas.height / 2 };
+
+   context.strokeText(answerText, textPos.x, textPos.y);
+   context.fillText(answerText, textPos.x, textPos.y);
+
+   //part 2 diff
+   answerText = (answer.answer[1] - answer.answer[0]).toString();
+   context.textAlign = "center";
+   context.textBaseline = "middle";
+   context.font = "bold 25px Arial";
+
+   let color = Math.floor((answer.answer[0] + answer.answer[1]) / 2);
+   color += 128;
+   if (color > 255) color -= 256;
+   context.fillStyle = "rgba(" + color + "," + color + "," + color + ",0.2)";
+   {
+      if (color < 100) {
+         let temp = color + 50;
+         context.strokeStyle = "rgba(" + temp + "," + temp + "," + temp + ",0.2)";
+      }
+      else {
+         let temp = color - 45;
+         context.strokeStyle = "rgba(" + temp + "," + temp + "," + temp + ",0.2)";
+      }
+      context.lineWidth = 4;
+      context.lineCap = "butt";
+      context.lineJoin = "bevel";
+   }
+
+   textPos = [Math.cos(answer.rotation), Math.sin(answer.rotation)];
+   textPos = textPos.map((value) => value * (answer.radius + 200) * -1);
+   textPos = { x: canvas.width / 2, y: canvas.height / 2 };
+
+   context.strokeText(answerText, textPos.x, textPos.y);
+   context.fillText(answerText, textPos.x, textPos.y);
+
+
+
+
+   //context.strokeText(answerText, layout.answerPositionBottom.x, canvas.height / 2);
+   //context.fillText(answerText, layout.answerPositionBottom.x, canvas.height / 2);
+
+
 }
 
 function genAnswer() {
@@ -237,23 +195,10 @@ function genAnswer() {
 
    answer.answer = [];
    {
-      let diff;
-		for (var i = 0; i < 3; i++) {
-         diff = Math.floor(Math.random() * (max - (min - 1)) + min);
-         if (diff < 15) {
-            if(Math.random() < 0.7) break;
-
-         }
-         else if (diff < 60) {
-            break;
-         }
-         else if (diff < 150) {
-            if (Math.random() < 0.7) break;
-         }
-         else {
-            if (Math.random() < 0.5) break;
-         }
-		}
+      let diff = Math.floor(Math.random() * (max - (min - 1)) + min);
+      if (diff > 120 && Math.random() < 0.4) { diff = Math.floor(Math.random() * (max - (min - 1)) + min) }
+      if (diff > 160 && Math.random() < 0.6) { diff = Math.floor(Math.random() * (max - (min - 1)) + min) }
+		
 
 
       answer.answer.push(Math.floor(Math.random() * (255 - diff)));
@@ -261,7 +206,7 @@ function genAnswer() {
 	}
 
    answer.rotation = Math.random() * Math.PI * 100;
-   answer.radius = Math.random() * 350 + 50;
+   answer.radius = Math.random() * 70 + 20;
 
    answer.elementList = []
    {
