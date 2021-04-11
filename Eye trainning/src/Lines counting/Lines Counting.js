@@ -7,8 +7,8 @@ To get the latest version, check out github.com/yagaodirac.
  */
 
 
-let min = 7;//Included
-let max = 24;//Included
+let min = 10;//Included
+let max = 35;//Included
 let colorDifferenceBetweenNabours = 25;//Better <=62. Not very sure. If this value >65, the function getDifferentColor2(ori1, ori2, distance)has a change to fail.
 
 

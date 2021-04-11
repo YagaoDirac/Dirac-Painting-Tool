@@ -196,13 +196,34 @@ function genAnswer() {
    answer.answer = [];
    {
       let diff = Math.floor(Math.random() * (max - (min - 1)) + min);
-      if (diff > 120 && Math.random() < 0.4) { diff = Math.floor(Math.random() * (max - (min - 1)) + min) }
-      if (diff > 160 && Math.random() < 0.6) { diff = Math.floor(Math.random() * (max - (min - 1)) + min) }
-		
+      //if (diff > 120 && Math.random() < 0.4) { diff = Math.floor(Math.random() * (max - (min - 1)) + min) }
+      //if (diff > 160 && Math.random() < 0.6) { diff = Math.floor(Math.random() * (max - (min - 1)) + min) }
+      if (Math.random() < 0.8) {
+         diff = Math.floor(Math.random() * (max - (min - 1)) + min);
+         if (diff > 100 && Math.random() < 0.3) { diff = Math.floor(Math.random() * (max - (min - 1)) + min);}
+         if (diff > 80 && Math.random() < 0.3) { diff = Math.floor(Math.random() * (max - (min - 1)) + min);}
+		}
 
-
-      answer.answer.push(Math.floor(Math.random() * (255 - diff)));
-      answer.answer.push(Math.floor(answer.answer[0] + diff));
+      let small = Math.floor(Math.random() * (255 - diff));
+      let big = small + diff;
+      if ((small < 15 || big > 235) && Math.random() < 0.7) {
+         small = Math.floor(Math.random() * (255 - diff));
+         big = small + diff;
+		}
+      if ((small < 15 || big > 235) && Math.random() < 0.7) {
+         small = Math.floor(Math.random() * (255 - diff));
+         big = small + diff;
+      }
+      if ((small < 30 || big > 220) && Math.random() < 0.2) {
+         small = Math.floor(Math.random() * (255 - diff));
+         big = small + diff;
+      }
+      if ((small < 50 || big > 205) && Math.random() < 0.2) {
+         small = Math.floor(Math.random() * (255 - diff));
+         big = small + diff;
+      }
+      answer.answer.push(small);
+      answer.answer.push(big);
 	}
 
    answer.rotation = Math.random() * Math.PI * 100;

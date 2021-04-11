@@ -53,17 +53,20 @@ steps[0] = function (context) {
 
    //Draws the question dot.
    {
-      if (Math.random() < 0.5) {
+      let a_random_number = Math.random();
+      let offset = { x: Math.random() * 360 - 180, y: Math.random() * 360 - 180 };
+
+      if (a_random_number < 0.3) {
          let size = Math.random() * 240 + 40;
-         let offset = { x: Math.random() * 360 - 180, y: Math.random() * 360 - 180 };
 
          context.fillStyle = "rgb(" + answer + "," + answer + "," + answer + ")";
          context.fillRect((canvas.width - size) / 2 + offset.x, (canvas.height - size) / 2 + offset.y, size, size);
+
+         return;
       }
-      else {
+      if (a_random_number < 0.8) {
          let sizeOut = Math.random() * 170 + 110;
          let sizeCore = Math.random() * 10 + 12;
-         let offset = { x: Math.random() * 360 - 180, y: Math.random() * 360 - 180 };
 
          context.lineWidth = 2;
          context.strokeStyle = "rgba(" + answer + "," + answer + "," + answer + ", 1)";
@@ -71,7 +74,21 @@ steps[0] = function (context) {
 
          context.fillStyle = "rgb(" + answer + "," + answer + "," + answer + ")";
          context.fillRect((canvas.width - sizeCore) / 2 + offset.x, (canvas.height - sizeCore) / 2 + offset.y, sizeCore, sizeCore);
+
+         return;
       }
+      if(true)
+      {
+         let question_width = Math.random() * 350 + 50;
+         let question_height = Math.random() * 20 + 3;
+         if (Math.random() < 0.5) { [question_width, question_height] = [question_height, question_width]; }
+
+         context.fillStyle = "rgb(" + answer + "," + answer + "," + answer + ")";
+         context.fillRect((canvas.width - question_width) / 2 + offset.x, (canvas.height - question_height) / 2 + offset.y, question_width, question_height);
+
+         return;
+      }
+
    }
 
 }
